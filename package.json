@@ -15,12 +15,126 @@
       "name": "rayso",
       "title": "rayso",
       "subtitle": "Create Image From Clipboard",
-      "description": "",
-      "mode": "view"
+      "description": "Use Ray.so to create beautiful images of your code",
+      "mode": "no-view",
+            "preferences": [
+        {
+          "data": [
+            {
+              "title": "Candy",
+              "value": "candy"
+            },
+            {
+              "title": "Breeze",
+              "value": "breeze"
+            },
+            {
+              "title": "Crimson",
+              "value": "crimson"
+            },
+            {
+              "title": "Falcon",
+              "value": "falcon"
+            },
+            {
+              "title": "Meadow",
+              "value": "meadow"
+            },
+            {
+              "title": "Midnight",
+              "value": "midnight"
+            },
+            {
+              "title": "Raindrop",
+              "value": "raindrop"
+            },
+            {
+              "title": "Sunset",
+              "value": "sunset"
+            }
+          ],
+          "default": "candy",
+          "description": "Change the background color",
+          "name": "theme",
+          "required": false,
+          "title": "Theme",
+          "type": "dropdown"
+        },
+        {
+          "data": [
+            {
+              "title": "16",
+              "value": "16"
+            },
+            {
+              "title": "32",
+              "value": "32"
+            },
+            {
+              "title": "64",
+              "value": "64"
+            },
+            {
+              "title": "128",
+              "value": "128"
+            }
+          ],
+          "default": "64",
+          "description": "Set the padding around the code",
+          "name": "padding",
+          "required": false,
+          "title": "Padding",
+          "type": "dropdown"
+        },
+        {
+          "default": true,
+          "description": "Set the theme to light or dark mode",
+          "label": "Enabled",
+          "name": "darkMode",
+          "required": false,
+          "title": "Dark Mode",
+          "type": "checkbox"
+        },
+        {
+          "default": true,
+          "description": "Select whether you want a gradient background or not",
+          "label": "Enabled",
+          "name": "background",
+          "required": false,
+          "title": "Background",
+          "type": "checkbox"
+        },
+        {
+          "default": "http://192.168.5.145:5252",
+          "description": "Set the URL of the Ray.so instance you want to use",
+          "name": "raysoUrl",
+          "required": false,
+          "title": "Ray.so URL",
+          "type": "textfield"
+        },
+        {
+          "description": "Set the directory of the System username instance you want to use",
+          "name": "SystemDirectory",
+          "required": true,
+          "title": "System Directory",
+          "type": "directory"
+        },
+        {
+          "default": false,
+          "description": "Open Directory",
+          "label": "Enabled",
+          "name": "OpenDirectory",
+          "required": false,
+          "title": "Open Directory",
+          "type": "checkbox"
+        }
+      ]
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.49.2"
+    "@raycast/api": "^1.49.2",
+    "js-base64": "^3.7.2",
+    "axios": "^1.3.5"
   },
   "devDependencies": {
     "@raycast/eslint-config": "1.0.5",
