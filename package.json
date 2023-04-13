@@ -127,6 +127,15 @@
           "required": false,
           "title": "Open Directory",
           "type": "checkbox"
+        },
+        {
+          "default": true,
+          "description": "Copy Image",
+          "label": "Enabled",
+          "name": "CopyImage",
+          "required": false,
+          "title": "Copy Image",
+          "type": "checkbox"
         }
       ]
     }

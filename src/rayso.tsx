@@ -13,6 +13,7 @@ interface Preferences {
   raysoUrl: string;
   SystemDirectory: string;
   OpenDirectory: boolean;
+  CopyImage: boolean;
 }
 
 export default async () => {
@@ -44,15 +45,22 @@ export default async () => {
     .then(async (res) => {
       if (res.status === 200) {
         const fileName = `rayso_${getNowTime()}.png`;
-      const filePath = `${preferences.SystemDirectory}/${fileName}`;
-      fs.writeFileSync(filePath, res.data);
+        const filePath = `${preferences.SystemDirectory}/${fileName}`;
+        fs.writeFileSync(filePath, res.data);
 
-      if (preferences.OpenDirectory) {
-        const fileDir = preferences.SystemDirectory.replace(/ /g, "\\ ");
-        exec(`open ${fileDir}`);
-      }
-      await showToast(Toast.Style.Success, "截图生成成功");
-      await showHUD("截图生成成功");
+        if (preferences.CopyImage) {
+          const copy = exec(`pbcopy < ${filePath.replace(/ /g, "\\ ")}`);
+          copy.on("exit", async () => {
+            if (preferences.OpenDirectory) {
+              const fileDir = preferences.SystemDirectory.replace(/ /g, "\\ ");
+              exec(`open ${fileDir}`);
+            }
+            await showHUD("已复制到剪贴板");
+          });
+        }
+
+        await showToast(Toast.Style.Success, "截图生成成功");
+        await showHUD("截图生成成功");
       } else {
         await showToast(Toast.Style.Failure, res.data);
         await showHUD(res.data);
