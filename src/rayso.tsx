@@ -53,22 +53,22 @@ export default async () => {
           const file = filePath;
           const fileContent: Clipboard.Content = { file };
           await Clipboard.copy(fileContent);
-          if (preferences.OpenDirectory) {
-            console.log(preferences.SystemDirectory);
-            // 讲路径修改为 AppleScript，打开文件夹并选中文件
-            const script = `
-              set folderPath to (POSIX file "${preferences.SystemDirectory}" as text)
-              set targetFile to (POSIX file "${filePath}" as text)
-              tell application "Finder"
-                activate
-                open folderPath
-                select targetFile
-              end tell
-            `;
-            runAppleScript(script);
-          }
           await showToast(Toast.Style.Success, "截图生成成功");
           await showHUD("已复制到剪贴板");
+        }
+        if (preferences.OpenDirectory) {
+          console.log(preferences.SystemDirectory);
+          // 讲路径修改为 AppleScript，打开文件夹并选中文件
+          const script = `
+            set folderPath to (POSIX file "${preferences.SystemDirectory}" as text)
+            set targetFile to (POSIX file "${filePath}" as text)
+            tell application "Finder"
+              activate
+              open folderPath
+              select targetFile
+            end tell
+          `;
+          runAppleScript(script);
         }
       }
     })
