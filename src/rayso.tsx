@@ -47,13 +47,12 @@ export default async () => {
       if (res.status === 200) {
         const fileName = `rayso_${getNowTime()}.png`;
         const filePath = `${preferences.SystemDirectory}/${fileName}`;
-        fs.writeFileSync(filePath, res.data);
-
+        await fs.promises.writeFile(filePath, res.data);
+        await showToast(Toast.Style.Success, "截图生成成功");
         if (preferences.CopyImage) {
           const file = filePath;
           const fileContent: Clipboard.Content = { file };
           await Clipboard.copy(fileContent);
-          await showToast(Toast.Style.Success, "截图生成成功");
           await showHUD("已复制到剪贴板");
         }
         if (preferences.OpenDirectory) {
