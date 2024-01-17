@@ -1,9 +1,9 @@
 import { getSelectedText, showToast, Toast, showHUD, getPreferenceValues, Clipboard } from "@raycast/api";
+import { runAppleScript } from "@raycast/utils";
 import { encodeURI } from "js-base64";
 import axios from "axios";
 import fs from "fs";
 import { getNowTime } from "./utils/date";
-import { exec } from "child_process";
 
 interface Preferences {
   theme: string;
@@ -56,8 +56,18 @@ export default async () => {
           const fileContent: Clipboard.Content = { file };
           await Clipboard.copy(fileContent);
           if (preferences.OpenDirectory) {
-            const fileDir = preferences.SystemDirectory.replace(/ /g, "\\ ");
-            exec(`open ${fileDir}`);
+            console.log(preferences.SystemDirectory);
+            // 讲路径修改为 AppleScript，打开文件夹并选中文件
+            const script = `
+              set folderPath to (POSIX file "${preferences.SystemDirectory}" as text)
+              set targetFile to (POSIX file "${filePath}" as text)
+              tell application "Finder"
+                activate
+                open folderPath
+                select targetFile
+              end tell
+            `;
+            runAppleScript(script);
           }
           await showToast(Toast.Style.Success, "截图生成成功");
           await showHUD("已复制到剪贴板");
