@@ -52,14 +52,6 @@ export default async () => {
         fs.writeFileSync(filePath, res.data);
 
         if (preferences.CopyImage) {
-          // const copy = exec(`osascript -e 'set the clipboard to (read (POSIX file "${filePath}") as JPEG picture)'`);
-          // copy.on("exit", () => {
-          //   console.log("copy success");
-          //   if (preferences.OpenDirectory) {
-          //     const fileDir = preferences.SystemDirectory.replace(/ /g, "\\ ");
-          //     exec(`open ${fileDir}`);
-          //   }
-          // });
           const file = filePath;
           const fileContent: Clipboard.Content = { file };
           await Clipboard.copy(fileContent);
