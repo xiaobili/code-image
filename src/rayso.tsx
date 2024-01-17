@@ -26,10 +26,8 @@ export default async () => {
     await showHUD("截图生成失败。请确保您已选择要截屏的文本");
     return;
   }
-
-  const base64Text = encodeURI(selectedText);
-
   await showToast(Toast.Style.Animated, "截图生成中");
+  const base64Text = encodeURI(selectedText);
   const url = preferences.raysoUrl;
   const data = {
     theme: preferences.theme,
