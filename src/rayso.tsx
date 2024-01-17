@@ -1,4 +1,4 @@
-import { getSelectedText, showToast, Toast, showHUD, getPreferenceValues } from "@raycast/api";
+import { getSelectedText, showToast, Toast, showHUD, getPreferenceValues, Clipboard } from "@raycast/api";
 import { encodeURI } from "js-base64";
 import axios from "axios";
 import fs from "fs";
@@ -41,6 +41,9 @@ export default async () => {
   await axios
     .post(url, data, {
       responseType: "arraybuffer",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
     })
     .then(async (res) => {
       if (res.status === 200) {
@@ -49,23 +52,24 @@ export default async () => {
         fs.writeFileSync(filePath, res.data);
 
         if (preferences.CopyImage) {
-          const copy = exec(`osascript -e 'set the clipboard to (read (POSIX file "${filePath}") as JPEG picture)'`);
-          copy.on("exit", () => {
-            console.log("copy success");
-            if (preferences.OpenDirectory) {
-              const fileDir = preferences.SystemDirectory.replace(/ /g, "\\ ");
-              exec(`open ${fileDir}`);
-            }
-          });
+          // const copy = exec(`osascript -e 'set the clipboard to (read (POSIX file "${filePath}") as JPEG picture)'`);
+          // copy.on("exit", () => {
+          //   console.log("copy success");
+          //   if (preferences.OpenDirectory) {
+          //     const fileDir = preferences.SystemDirectory.replace(/ /g, "\\ ");
+          //     exec(`open ${fileDir}`);
+          //   }
+          // });
+          const file = filePath;
+          const fileContent: Clipboard.Content = { file };
+          await Clipboard.copy(fileContent);
+          if (preferences.OpenDirectory) {
+            const fileDir = preferences.SystemDirectory.replace(/ /g, "\\ ");
+            exec(`open ${fileDir}`);
+          }
           await showToast(Toast.Style.Success, "截图生成成功");
           await showHUD("已复制到剪贴板");
-        } else {
-          await showToast(Toast.Style.Success, "截图生成成功");
-          await showHUD("截图生成成功");
         }
-      } else {
-        await showToast(Toast.Style.Failure, res.data);
-        await showHUD(res.data);
       }
     })
     .catch(async (e) => {
