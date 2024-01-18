@@ -27,6 +27,7 @@ export default async () => {
   }
   await showToast(Toast.Style.Animated, "截图生成中");
   const base64Text = Buffer.from(selectedText).toString("base64");
+  console.log(base64Text);
   const url = preferences.raysoUrl;
   const data = {
     theme: preferences.theme,
@@ -44,6 +45,7 @@ export default async () => {
     })
     .then(async (res) => {
       if (res.status === 200) {
+        console.log("截图成功");
         const fileName = `rayso_${getNowTime()}.png`;
         const filePath = `${preferences.SystemDirectory}/${fileName}`;
         await fs.promises.writeFile(filePath, res.data);
