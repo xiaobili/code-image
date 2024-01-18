@@ -49,13 +49,13 @@ export default async () => {
         const filePath = `${preferences.SystemDirectory}/${fileName}`;
         await fs.promises.writeFile(filePath, res.data);
         await showToast(Toast.Style.Success, "截图生成成功");
-        while (preferences.CopyImage) {
+        if (preferences.CopyImage) {
           const file = filePath;
           const fileContent: Clipboard.Content = { file };
           await Clipboard.copy(fileContent);
           await showHUD("已复制到剪贴板");
         }
-        while (preferences.OpenDirectory) {
+        if (preferences.OpenDirectory) {
           const script = `
             set folderPath to (POSIX file "${preferences.SystemDirectory}" as text)
             set targetFile to (POSIX file "${filePath}" as text)
