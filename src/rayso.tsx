@@ -38,7 +38,7 @@ export default async () => {
   };
   await axios
     .post(url, data, {
-      responseType: "arraybuffer",
+      responseType: "stream",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
       },
@@ -56,7 +56,6 @@ export default async () => {
           await showHUD("已复制到剪贴板");
         }
         while (preferences.OpenDirectory) {
-          console.log(preferences.SystemDirectory);
           const script = `
             set folderPath to (POSIX file "${preferences.SystemDirectory}" as text)
             set targetFile to (POSIX file "${filePath}" as text)
