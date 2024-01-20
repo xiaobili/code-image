@@ -2,7 +2,6 @@ import { getSelectedText, showToast, Toast, showHUD, getPreferenceValues, Clipbo
 import { runAppleScript } from "@raycast/utils";
 import axios from "axios";
 import fs from "fs";
-import { toBase64 } from "js-base64";
 import { getNowTime } from "./utils/date";
 
 interface Preferences {
@@ -28,8 +27,7 @@ export default async () => {
   }
   await showToast(Toast.Style.Animated, "截图生成中");
   //const base64Text = Buffer.from(selectedText).toString("base64");
-  const base64Text = toBase64(selectedText);
-  console.log(base64Text);
+  const base64Text = Buffer.from(selectedText).toString("base64");
   const url = preferences.raysoUrl;
   const data = {
     theme: preferences.theme,
