@@ -1,5 +1,4 @@
-import { getSelectedText, showToast, Toast, showHUD, getPreferenceValues, Clipboard } from "@raycast/api";
-import { runAppleScript } from "@raycast/utils";
+import { getSelectedText, showToast, Toast, showHUD, getPreferenceValues, Clipboard, showInFinder } from "@raycast/api";
 import axios from "axios";
 import fs from "fs";
 import { getNowTime } from "./utils/date";
@@ -54,16 +53,7 @@ export default async () => {
       await showHUD("已复制到剪贴板");
     }
     if (preferences.OpenDirectory) {
-      const script = `
-          set folderPath to (POSIX file "${preferences.SystemDirectory}" as text)
-          set targetFile to (POSIX file "${filePath}" as text)
-          tell application "Finder"
-            activate
-            open folderPath
-            select targetFile
-          end tell
-        `;
-      runAppleScript(script);
+      await showInFinder(filePath);
     }
   } else {
     await showToast(Toast.Style.Failure, "截图生成失败");
