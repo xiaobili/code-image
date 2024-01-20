@@ -18,7 +18,6 @@ interface Preferences {
 
 export default async () => {
   const preferences: Preferences = getPreferenceValues();
-
   let selectedText;
   try {
     selectedText = await getSelectedText();
@@ -36,44 +35,37 @@ export default async () => {
     padding: preferences.padding,
     code: base64Text,
   };
-  await axios
-    .post(url, data, {
-      responseType: "stream",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-      },
-    })
-    .then(async (res) => {
-      if (res.status === 200) {
-        console.log("截图成功");
-        const fileName = `rayso_${getNowTime()}.png`;
-        const filePath = `${preferences.SystemDirectory}/${fileName}`;
-        await fs.promises.writeFile(filePath, res.data);
-        await showToast(Toast.Style.Success, "截图生成成功");
-        if (preferences.CopyImage) {
-          const file = filePath;
-          const fileContent: Clipboard.Content = { file };
-          await Clipboard.copy(fileContent);
-          await showHUD("已复制到剪贴板");
-        }
-        if (preferences.OpenDirectory) {
-          const script = `
-            set folderPath to (POSIX file "${preferences.SystemDirectory}" as text)
-            set targetFile to (POSIX file "${filePath}" as text)
-            tell application "Finder"
-              activate
-              open folderPath
-              select targetFile
-            end tell
-          `;
-          runAppleScript(script);
-        }
-      } else {
-        await showToast(Toast.Style.Failure, "截图生成失败");
-      }
-    })
-    .catch(async (e) => {
-      await showToast(Toast.Style.Failure, e);
-      await showHUD(e);
-    });
+  const resp = await axios.post(url, data, {
+    responseType: "stream",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+    },
+  });
+  if (resp.status === 200) {
+    console.log("截图成功");
+    const fileName = `rayso_${getNowTime()}.png`;
+    const filePath = `${preferences.SystemDirectory}/${fileName}`;
+    await fs.promises.writeFile(filePath, resp.data);
+    await showToast(Toast.Style.Success, "截图生成成功");
+    if (preferences.CopyImage) {
+      const file = filePath;
+      const fileContent: Clipboard.Content = { file };
+      await Clipboard.copy(fileContent);
+      await showHUD("已复制到剪贴板");
+    }
+    if (preferences.OpenDirectory) {
+      const script = `
+          set folderPath to (POSIX file "${preferences.SystemDirectory}" as text)
+          set targetFile to (POSIX file "${filePath}" as text)
+          tell application "Finder"
+            activate
+            open folderPath
+            select targetFile
+          end tell
+        `;
+      runAppleScript(script);
+    }
+  } else {
+    await showToast(Toast.Style.Failure, "截图生成失败");
+  }
 };
