@@ -1,4 +1,4 @@
-import { getSelectedText, showToast, Toast, showHUD, getPreferenceValues, Clipboard, showInFinder } from "@raycast/api";
+import { showToast, Toast, showHUD, getPreferenceValues, Clipboard, showInFinder } from "@raycast/api";
 import axios from "axios";
 import fs from "fs";
 import { getNowTime } from "./utils/date";
@@ -17,15 +17,15 @@ interface Preferences {
 
 export default async () => {
   const preferences: Preferences = getPreferenceValues();
-  let selectedText;
+  let selectedText: string | undefined;
   try {
-    selectedText = await getSelectedText();
+    selectedText = await Clipboard.readText();
   } catch (e) {
     await showHUD("截图生成失败。请确保您已选择要截屏的文本");
     return;
   }
   await showToast(Toast.Style.Animated, "截图生成中");
-  const base64Text = encodeURI(selectedText);
+  const base64Text = encodeURI(selectedText ? selectedText : "");
   const url = preferences.raysoUrl;
   const data = {
     theme: preferences.theme,
